@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const { Schema, SchemaTypes: { ObjectId } } = mongoose
 
+const content = require('./content')
+
 const subchannel = new Schema({
 
     title: {

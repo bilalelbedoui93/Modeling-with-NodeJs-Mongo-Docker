@@ -5,8 +5,11 @@ const group = new Schema({
     name: {
         type: String,
         required: true,
-        minlength: 5,
-        maxlength: 255,
+        trim: true,
+    },
+    description:{
+        type: String,
+        required: true,
         trim: true,
     }
 })

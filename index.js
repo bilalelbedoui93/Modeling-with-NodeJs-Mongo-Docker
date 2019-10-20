@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
-const routes = require('./routes')
+const groups = require('./routes/groups')
 
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -24,7 +24,7 @@ const { env: { MONGO_URL, PORT } } = process;
         
         app.use(cors())
 
-        app.use('/api', routes)
+        app.use('/api', groups)
 
         console.log(`connected to database MongoDB! Port:${MONGO_URL}`);
 
