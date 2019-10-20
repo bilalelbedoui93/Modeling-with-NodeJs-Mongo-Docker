@@ -7,7 +7,7 @@ const subchannel = require('./subchannel')
 
 const channel = new Schema({
     group:{
-        type: ObjectId,
+        type: [ObjectId],
         ref: 'Group',
         required: true
     },

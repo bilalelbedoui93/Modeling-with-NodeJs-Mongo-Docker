@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "debug": "node inspect index.js",
+    "test": "npx mocha ./**/*.spec.js --timeout 30000",
+    "test:debug": "npx mocha debug ./**/*.spec.js --timeout 30000",
+    "test:coverage": "nyc --reporter=html --reporter=text mocha '**/*.spec.js' --timeout 30000"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +16,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.7.5"
   }
