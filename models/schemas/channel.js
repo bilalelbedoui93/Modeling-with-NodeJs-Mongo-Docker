@@ -1,16 +1,15 @@
 const mongoose = require('mongoose')
-const { Schema, SchemaTypes: { ObjectId } } = mongoose
+const { Schema, Types: { ObjectId } } = mongoose
 
 const content = require('./content')
 const subchannel = require('./subchannel')
 
 
 const channel = new Schema({
-    group:{
-        type: [ObjectId],
-        ref: 'Group',
-        required: true
-    },
+    groups:[{
+        type: Schema.Types.ObjectId,
+        ref: 'groups',
+    }],
     title: {
         type: String,
         required: true,
@@ -33,12 +32,12 @@ const channel = new Schema({
         required: true
     },
     subchannels:{
-        type: subchannel,
-        required: function () { this.has_subchannels == true ? true : false }
+        type: [subchannel]
+        //required: function () { this.has_subchannels == true ? true : false }
     },
     content:{
-        type: content,
-        required: function () { this.has_subchannels == false ? true : false }
+        type: [content]
+        //required: function () { this.has_subchannels == false ? true : false }
     }
 })
 

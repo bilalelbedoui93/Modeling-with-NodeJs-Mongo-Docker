@@ -14,7 +14,6 @@ router.post('/group', async (req, res) => {
 
 router.get('/group/:id', async (req, res) => {
     try {
-        debugger
         const { params: { id } } = req
         const {group, channels} = await logic.retrieveGroupWithChannels(id);
         res.json({ group, channels });

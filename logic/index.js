@@ -20,7 +20,7 @@ const logic = {
                 })
                 return await group.save();
             } catch (error) {
-                throw new Error(error);
+                throw new Error(error.message);
             }
         })()
     },
@@ -40,7 +40,18 @@ const logic = {
                 delete group._id
                 delete group.__v
 
-                const channels = await Channel.find({ group: id })
+                const channels = await Channel.find({ groups: id }).populate('groups').lean()
+
+                channels.map(channel => {
+                    channel.groups.map(element => {
+                        if (element._id) element.id = element._id
+                        delete element.__v
+                        delete element._id
+                    })
+                    channel.id = channel._id
+                    delete channel._id
+                    delete channel.__v
+                })
 
                 return { group, channels }
 
@@ -48,10 +59,42 @@ const logic = {
                 throw new Error(error.message);
             }
         })()
-    }
+    },
 
     /***********************************CHANNEL*********************************************/
 
+    addChannel(group_Ids, title, language, picture, has_subchannels, subchannels, content) {
+
+
+        return (async () => {
+            try {
+                const groups = []
+
+                const promises = group_Ids.map(async (element) => {
+                    const group = await Group.findById(element)
+                    if (!group) throw Error(`No_group_found`)
+
+                    groups.push(group)
+                })
+
+                await Promise.all(promises);
+
+                const channel = new Channel({
+                    groups,
+                    title,
+                    language,
+                    picture,
+                    has_subchannels,
+                    subchannels,
+                    content
+                })
+                return await channel.save();
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        })()
+
+    }
 }
 
 module.exports = logic
