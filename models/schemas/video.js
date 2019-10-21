@@ -30,9 +30,6 @@ const video = new Schema({
     file_url: {
         type: String,
         required: true
-    },
-    rating: {
-        type: Array,
     }
 })
 

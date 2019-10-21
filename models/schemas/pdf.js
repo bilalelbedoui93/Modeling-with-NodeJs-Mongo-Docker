@@ -21,10 +21,6 @@ const pdf = new Schema({
     file_url:{
         type: String,
         required: true 
-    },
-    rating: {
-        type: Array,
-        required: true,
     }
 })
 

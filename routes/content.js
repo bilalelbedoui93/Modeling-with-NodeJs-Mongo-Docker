@@ -32,6 +32,17 @@ router.post('/content-text', async (req, res) => {
     }
 })
 
+router.post('/content/rating', async (req, res) => {
+    try {
+        debugger
+        const { body: { rating_value, channel_id, content_id } } = req
+        await logic.addRatingValueContentChannel(rating_value, channel_id, content_id)
+        res.json({ message: 'rating value added to content' });
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
 router.post('/subchannel/content-video', async (req, res) => {
     try {
         debugger
@@ -59,6 +70,16 @@ router.post('/subchannel/content-text', async (req, res) => {
         const { body: { channel_id, subchannel_id, type, title, author, text_body } } = req
         await logic.addSubchannelTextContent(channel_id, subchannel_id, type, title, author, text_body)
         res.json({ message: 'content_text added to subchannel' });
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
+router.post('/subchannel/content/rating', async (req, res) => {
+    try {
+        const { body: { rating_value, channel_id, subchannel_id, content_id } } = req
+        await logic.addRatingValueContentSubchannel(rating_value, channel_id, subchannel_id, content_id)
+        res.json({ message: 'rating value added to subchannel content' });
     } catch (error) {
         res.status(400).json({ error: error.message })
     }

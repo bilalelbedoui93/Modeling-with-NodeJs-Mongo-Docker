@@ -17,10 +17,6 @@ const text = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    },
-    rating: {
-        type: Array,
-        required: true,
     }
 })
 

@@ -6,7 +6,6 @@ const logic = {
     /***********************************GROUP*********************************************/
 
     addGroup(name, description) {
-
         validate.arguments([
             { name: 'name', value: name, type: 'string', notEmpty: true },
             { name: 'description', value: description, type: 'string', notEmpty: true }
@@ -26,7 +25,6 @@ const logic = {
     },
 
     retrieveGroupWithChannels(id) {
-
         validate.arguments([
             { name: 'id', value: id, type: 'string', notEmpty: true }
         ])
@@ -63,8 +61,14 @@ const logic = {
 
     /***********************************CHANNEL*********************************************/
 
-    addChannel(group_Ids, title, language, picture, has_subchannels, subchannels, content) {
-
+    addChannel(group_Ids, title, language, picture, has_subchannels) {
+        validate.arguments([
+            { name: 'group_Ids', value: group_Ids, type: 'array', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'language', value: language, type: 'string', notEmpty: true },
+            { name: 'picture', value: picture, type: 'string', notEmpty: true },
+            { name: 'has_subchannels', value: has_subchannels, type: 'boolean', notEmpty: true }
+        ])
 
         return (async () => {
             try {
@@ -79,7 +83,7 @@ const logic = {
 
                 await Promise.all(promises);
 
-                const channel = new Channel({ groups, title, language, picture, has_subchannels, subchannels, content })
+                const channel = new Channel({ groups, title, language, picture, has_subchannels })
 
                 return await channel.save();
             } catch (error) {
@@ -91,6 +95,15 @@ const logic = {
     /***********************************CONTENT-CHANNELS*********************************************/
 
     addVideoContent(channel_id, type, title, author, movie_director, genre, description, file_url) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'type', value: type, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'author', value: author, type: 'string', notEmpty: true },
+            { name: 'genre', value: genre, type: 'string', notEmpty: true },
+            { name: 'description', value: description, type: 'string', notEmpty: true },
+            { name: 'file_url', value: file_url, type: 'string', notEmpty: true }
+        ])
 
         return (async () => {
             try {
@@ -102,10 +115,8 @@ const logic = {
 
                     const video = new Video({ title, author, movie_director, genre, description, file_url })
 
-                    const content_post = new Content({
-                        type,
-                        video
-                    })
+                    const content_post = new Content({ type, video })
+
                     channel.content.push(content_post)
 
                     return await channel.save()
@@ -120,6 +131,14 @@ const logic = {
     },
 
     addPdfContent(channel_id, type, title, author, description, file_url) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'type', value: type, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'author', value: author, type: 'string', notEmpty: true },
+            { name: 'description', value: description, type: 'string', notEmpty: true },
+            { name: 'file_url', value: file_url, type: 'string', notEmpty: true }
+        ])
         return (async () => {
             try {
                 if (type === 'pdf') {
@@ -145,6 +164,13 @@ const logic = {
 
     },
     addTextContent(channel_id, type, title, author, text_body) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'type', value: type, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'author', value: author, type: 'string', notEmpty: true },
+            { name: 'text_body', value: text_body, type: 'string', notEmpty: true }
+        ])
         return (async () => {
             try {
 
@@ -173,7 +199,13 @@ const logic = {
 
     /***********************************SUBCHANNELS*******************************************/
 
-    addSubchannels(channel_id, title, language, picture, content) {
+    addSubchannels(channel_id, title, language, picture) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'language', value: language, type: 'string', notEmpty: true },
+            { name: 'picture', value: picture, type: 'string', notEmpty: true }
+        ])
 
         return (async () => {
             try {
@@ -183,7 +215,7 @@ const logic = {
 
                 if (channel.has_subchannels) {
 
-                    const subchannel = new Subchannel({ title, language, picture, content })
+                    const subchannel = new Subchannel({ title, language, picture })
 
                     channel.subchannels.push(subchannel)
 
@@ -200,6 +232,17 @@ const logic = {
     /***********************************CONTENT-SUBCHANNELS*********************************************/
 
     addSubchannelVideoContent(channel_id, subchannel_id, type, title, author, movie_director, genre, description, file_url) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'subchannel_id', value: subchannel_id, type: 'string', notEmpty: true },
+            { name: 'type', value: type, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'author', value: author, type: 'string', notEmpty: true },
+            { name: 'genre', value: genre, type: 'string', notEmpty: true },
+            { name: 'description', value: description, type: 'string', notEmpty: true },
+            { name: 'file_url', value: file_url, type: 'string', notEmpty: true }
+        ])
+
         return (async () => {
             try {
                 if (type === 'video') {
@@ -232,6 +275,15 @@ const logic = {
     },
 
     addSubchannelPdfContent(channel_id, subchannel_id, type, title, author, description, file_url) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'subchannel_id', value: subchannel_id, type: 'string', notEmpty: true },
+            { name: 'type', value: type, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'author', value: author, type: 'string', notEmpty: true },
+            { name: 'description', value: description, type: 'string', notEmpty: true },
+            { name: 'file_url', value: file_url, type: 'string', notEmpty: true }
+        ])
         return (async () => {
             try {
                 if (type === 'pdf') {
@@ -265,9 +317,17 @@ const logic = {
     },
 
     addSubchannelTextContent(channel_id, subchannel_id, type, title, author, text_body) {
+        validate.arguments([
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'subchannel_id', value: subchannel_id, type: 'string', notEmpty: true },
+            { name: 'type', value: type, type: 'string', notEmpty: true },
+            { name: 'title', value: title, type: 'string', notEmpty: true },
+            { name: 'author', value: author, type: 'string', notEmpty: true },
+            { name: 'text_body', value: text_body, type: 'string', notEmpty: true }
+        ])
+
         return (async () => {
             try {
-
                 if (type === 'text') {
                     const channel = await Channel.findById(channel_id)
                     if (!channel) throw Error(`No_channel_found`)
@@ -283,9 +343,7 @@ const logic = {
                         channel.subchannels[index_subchannel].content.push(content_post)
 
                         return await channel.save()
-
                     }
-
                     if (!channel.has_subchannels) throw Error(`channel does not accept subchannel content`)
                 }
 
@@ -294,8 +352,69 @@ const logic = {
                 throw new Error(error.message);
             }
         })()
-    }
+    },
 
+    /***********************************RATING*********************************************/
+
+    addRatingValueContentChannel(rating_value, channel_id, content_id) {
+        validate.arguments([
+            { name: 'rating_value', value: rating_value, type: 'number', notEmpty: true },
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'content_id', value: content_id, type: 'string', notEmpty: true }
+        ])
+
+        return (async () => {
+            try {
+                if (rating_value <= 0 || rating_value >= 10) throw Error(`rating value must be between 0-10`)
+
+                const channel = await Channel.findById(channel_id)
+                if (!channel) throw Error(`No_channel_found`)
+
+                if (channel.has_subchannels) throw Error(`This channel has no content`)
+
+                const index_content = channel.content.findIndex(element => element._id.toString() === content_id)
+                if (index_content === -1) throw Error(`No_content_found`)
+
+                channel.content[index_content].rating.push(rating_value)
+                return await channel.save()
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        })()
+    },
+    addRatingValueContentSubchannel(rating_value, channel_id, subchannel_id, content_id) {
+        validate.arguments([
+            { name: 'rating_value', value: rating_value, type: 'number', notEmpty: true },
+            { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
+            { name: 'subchannel_id', value: subchannel_id, type: 'string', notEmpty: true },
+            { name: 'content_id', value: content_id, type: 'string', notEmpty: true }
+        ])
+
+        return (async () => {
+            try {
+                
+                if (rating_value <= 0 || rating_value >= 10) throw Error(`rating value must be between 0-10`)
+
+                const channel = await Channel.findById(channel_id)
+                if (!channel) throw Error(`No_channel_found`)
+
+                if (channel.has_subchannels) {
+
+                    const index_subchannel = channel.subchannels.findIndex(element => element._id.toString() === subchannel_id)
+                    if (index_subchannel === -1) throw Error(`No_subchannel_found`)
+
+                    const index_content = channel.subchannels[index_subchannel].content.findIndex(element => element._id.toString() === content_id)
+                    if (index_content === -1) throw Error(`No_content_found`)
+
+                    channel.subchannels[index_subchannel].content[index_content].rating.push(rating_value)
+                    return await channel.save()
+                }
+                if (!channel.has_subchannels) throw Error(`channel does not accept subchannel rating`)
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        })()
+    }
 }
 
 module.exports = logic

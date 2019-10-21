@@ -8,8 +8,6 @@ const subchannel = new Schema({
     title: {
         type: String,
         required: true,
-        minlength: 5,
-        maxlength: 255,
         trim: true,
     },
     language: {
