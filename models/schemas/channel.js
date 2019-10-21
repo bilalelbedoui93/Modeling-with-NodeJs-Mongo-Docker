@@ -6,7 +6,7 @@ const subchannel = require('./subchannel')
 
 
 const channel = new Schema({
-    groups:[{
+    groups: [{
         type: Schema.Types.ObjectId,
         ref: 'groups',
     }],
@@ -19,7 +19,7 @@ const channel = new Schema({
     },
     language: {
         type: String,
-        required:true,
+        required: true,
         trim: true
     },
     picture: {
@@ -31,15 +31,18 @@ const channel = new Schema({
         default: false,
         required: true
     },
-    subchannels:{
+    subchannels: {
         type: [subchannel]
         //required: function () { this.has_subchannels == true ? true : false }
     },
-    content:{
-        type: [content]
+    content: {
+        type: [content],
         //required: function () { this.has_subchannels == false ? true : false }
     }
-})
+},
+    {
+        minimize: false
+    })
 
 module.exports = channel
 

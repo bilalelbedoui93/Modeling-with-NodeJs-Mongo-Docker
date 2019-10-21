@@ -2,12 +2,11 @@ const mongoose = require('mongoose')
 const { Schema, SchemaTypes: { ObjectId } } = mongoose
 
 const pdf = new Schema({
-
-    author: {
+    title:{
         type: String,
         required: true
     },
-    title:{
+    author: {
         type: String,
         required: true
     },
@@ -15,16 +14,16 @@ const pdf = new Schema({
         type: String,
         required: true
     },
-    date: {
+    createdAt: {
         type: Date,
-        required: true,
+        default: Date.now
     },
     file_url:{
         type: String,
         required: true 
     },
     rating: {
-        type: Number,
+        type: Array,
         required: true,
     }
 })

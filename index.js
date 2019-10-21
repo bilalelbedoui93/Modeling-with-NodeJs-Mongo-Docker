@@ -4,6 +4,8 @@ const express = require("express");
 const app = express();
 const groups = require('./routes/groups')
 const channels = require('./routes/channels')
+const content = require('./routes/content')
+const subchannels = require('./routes/subchannels')
 
 
 const bodyParser = require("body-parser");
@@ -28,6 +30,9 @@ const { env: { MONGO_URL, PORT } } = process;
 
         app.use('/api', groups)
         app.use('/api', channels)
+        app.use('/api', content)
+        app.use('/api', subchannels)
+
 
 
         console.log(`connected to database MongoDB! Port:${MONGO_URL}`);

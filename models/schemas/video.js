@@ -3,15 +3,19 @@ const { Schema, SchemaTypes: { ObjectId } } = mongoose
 
 const video = new Schema({
 
+    title: {
+        type: String,
+        required: true
+    },
     author: {
         type: String,
         required: true
     },
-    movie_director:{
+    movie_director: {
         type: String,
         required: true
     },
-    genre:{
+    genre: {
         type: String,
         required: true
     },
@@ -19,17 +23,16 @@ const video = new Schema({
         type: String,
         required: true
     },
-    date: {
+    createdAt: {
         type: Date,
-        required: true,
+        default: Date.now
     },
-    file_url:{
+    file_url: {
         type: String,
-        required: true 
+        required: true
     },
     rating: {
-        type: Number,
-        required: true,
+        type: Array,
     }
 })
 

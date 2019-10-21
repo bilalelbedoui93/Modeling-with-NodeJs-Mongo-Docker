@@ -2,12 +2,11 @@ const mongoose = require('mongoose')
 const { Schema, SchemaTypes: { ObjectId } } = mongoose
 
 const text = new Schema({
-
-    author: {
+    title:{
         type: String,
         required: true
     },
-    title:{
+    author: {
         type: String,
         required: true
     },
@@ -15,12 +14,12 @@ const text = new Schema({
         type: String,
         required: true
     },
-    date: {
+    createdAt: {
         type: Date,
-        required: true,
+        default: Date.now
     },
     rating: {
-        type: Number,
+        type: Array,
         required: true,
     }
 })

@@ -7,20 +7,21 @@ const text = require('./text')
 
 
 const content = new Schema({
-
-    type: {
+    type:{
         type: String,
-        required: true,
-        enum: ['video', 'pdf', 'text']
+        required: true
     },
     video: {
-        type: video
+        type: video,
+        required: function () { this.type === 'video' ? true : false }
     },
     pdf: {
-        type: pdf
+        type: pdf,
+        required: function () { this.type === 'pdf' ? true : false }
     },
     text: {
-        type: text
+        type: text,
+        required: function () { this.type === 'text' ? true : false }
     }
 })
 

@@ -22,8 +22,7 @@ const subchannel = new Schema({
         required: true,
     },
     content:{
-        type: content,
-        required: true
+        type: [content],
     }
 })
 

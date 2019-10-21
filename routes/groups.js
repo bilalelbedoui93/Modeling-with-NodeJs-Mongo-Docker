@@ -1,12 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const logic = require('../logic');
+const express = require('express')
+const router = express.Router()
+const logic = require('../logic')
 
 router.post('/group', async (req, res) => {
     try {
         const { body: { name, description } } = req
-        await logic.addGroup(name, description);
-        res.json({ message: 'Group added' });
+        await logic.addGroup(name, description)
+        res.json({ message: 'Group added' })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -15,8 +15,8 @@ router.post('/group', async (req, res) => {
 router.get('/group/:id', async (req, res) => {
     try {
         const { params: { id } } = req
-        const {group, channels} = await logic.retrieveGroupWithChannels(id);
-        res.json({ group, channels });
+        const {group, channels} = await logic.retrieveGroupWithChannels(id)
+        res.json({ group, channels })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
