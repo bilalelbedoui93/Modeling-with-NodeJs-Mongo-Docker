@@ -1,6 +1,7 @@
 const { Group, Channel, Subchannel, Content, Pdf, Video, Text } = require('../models')
 const validate = require('../common/validate')
-
+const fs = require('fs');
+const Json2csvParser = require('json2csv').Parser;
 const logic = {
 
     /***********************************GROUP*********************************************/
@@ -354,7 +355,7 @@ const logic = {
         })()
     },
 
-    /***********************************RATING*********************************************/
+    /***********************************RATING***********************************************/
 
     addRatingValueContentChannel(rating_value, channel_id, content_id) {
         validate.arguments([
@@ -365,7 +366,7 @@ const logic = {
 
         return (async () => {
             try {
-                if (rating_value <= 0 || rating_value >= 10) throw Error(`rating value must be between 0-10`)
+                if (rating_value < 0 || rating_value > 10) throw Error(`rating value must be between 0-10`)
 
                 const channel = await Channel.findById(channel_id)
                 if (!channel) throw Error(`No_channel_found`)
@@ -392,8 +393,8 @@ const logic = {
 
         return (async () => {
             try {
-                
-                if (rating_value <= 0 || rating_value >= 10) throw Error(`rating value must be between 0-10`)
+
+                if (rating_value < 0 || rating_value > 10) throw Error(`rating value must be between 0-10`)
 
                 const channel = await Channel.findById(channel_id)
                 if (!channel) throw Error(`No_channel_found`)
@@ -414,7 +415,168 @@ const logic = {
                 throw new Error(error.message);
             }
         })()
+    },
+
+    /***********************************AVERAGE***********************************************/
+
+
+    averageChannelsWithContent() {
+
+        return (async () => {
+            try {
+                let sum = 0
+                let avg_cont, avg_cha
+                let average_contents = []
+                let average_content_channel = []
+
+                const channels = await Channel.find({ has_subchannels: false })
+                if (!channels) throw Error(`No_channel_found`)
+
+                channels.map(item => {
+                    item.content.map(cont => {
+
+                        console.log('cont.rating', cont.rating)
+                        if (cont.rating.length != 0) {
+                            sum = cont.rating.reduce((previous, current) => current += previous, 0)
+                            avg_cont = sum / cont.rating.length
+                        }
+                        if (cont.rating.length == 0) avg_cont = 5
+
+                        average_contents.push(avg_cont)
+                    })
+
+                    sum = 0
+                    average_contents.map(x => {
+                        console.log('average_contents', average_contents)
+                        sum = sum + x
+                        avg_cha = sum / average_contents.length
+                    })
+
+                    average_content_channel.push({
+                        channel_title: item.title,
+                        average_rating: avg_cha.toFixed(1)
+                    })
+                    average_contents = []
+                })
+
+                console.log('average_content_channel', average_content_channel)
+
+                return average_content_channel
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        })()
+    },
+
+    averageChannelsWithSubchannels() {
+
+        return (async () => {
+            try {
+                let sum = 0
+                let avg_cont, avg_sub, avg_cha
+                let average_contents = []
+                let average_content_subchannel = []
+                let average_content_channel = []
+
+
+                const channels = await Channel.find({ has_subchannels: true })
+                if (!channels) throw Error(`No_channel_found`)
+
+                channels.map(item => {
+
+                    item.subchannels.map(subchannel => {
+
+                        subchannel.content.map(cont => {
+
+                            console.log('cont.rating', cont.rating)
+                            if (cont.rating.length != 0) {
+                                sum = cont.rating.reduce((previous, current) => current += previous, 0)
+                                avg_cont = sum / cont.rating.length
+                            }
+                            if (cont.rating.length == 0) avg_cont = 5
+
+                            average_contents.push(avg_cont)
+                        })
+                        sum = 0
+                        average_contents.map(x => {
+                            console.log('average_contents', average_contents)
+                            sum = sum + x
+                            avg_sub = sum / average_contents.length
+                        })
+
+                        average_content_subchannel.push(avg_sub)
+                        average_contents = []
+                    })
+
+                    sum = 0
+                    average_content_subchannel.map(x => {
+                        console.log('average_content_subchannel', average_content_subchannel)
+                        sum = sum + x
+                        avg_cha = sum / average_content_subchannel.length
+                    })
+
+                    average_content_channel.push({
+                        channel_title: item.title,
+                        average_rating: avg_cha.toFixed(1)
+
+                    })
+                    average_content_subchannel = []
+
+                })
+
+                console.log('average_content_channel', average_content_channel)
+
+                return average_content_channel
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        })()
+    },
+
+    listAverageAllChannels() {
+
+        return (async () => {
+            try {
+                const channelsWithOnlyContent = await this.averageChannelsWithContent()
+
+                const channelsWithOnlySubchannels = await this.averageChannelsWithSubchannels()
+
+                const result = channelsWithOnlyContent.concat(channelsWithOnlySubchannels)
+
+                function compare(a, b) {
+                    if (a.average_rating > b.average_rating) {
+                        return -1;
+                    }
+                    if (a.average_rating < b.average_rating) {
+                        return 1;
+                    }
+                    return 0;
+                }
+                
+                result.sort(compare)
+
+                const csvFields = ['channel_title', 'average_rating']
+                const json2csvParser = new Json2csvParser({ csvFields })
+                const csv = json2csvParser.parse(result)
+                
+                console.log(csv)
+
+                fs.writeFile('raking_channels_rating.csv', csv, function(err) {
+                    if (err) console.log(err);
+                    console.log('file saved');
+                });
+                // -> Check 'customer.csv' file in root project folder             
+
+            }
+            catch (error) {
+                throw new Error(error.message);
+            }
+        })()
+
     }
+
 }
 
 module.exports = logic

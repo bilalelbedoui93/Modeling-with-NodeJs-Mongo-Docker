@@ -12,4 +12,13 @@ router.post('/channel', async (req, res) => {
     }
 })
 
+router.get('/channels/average', async (req, res) => {
+    try {
+        const response = await logic.listAverageAllChannels()
+        res.json({ response })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
 module.exports = router
