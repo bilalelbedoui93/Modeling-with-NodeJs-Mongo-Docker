@@ -6,6 +6,13 @@ const logic = {
 
     /***********************************GROUP*********************************************/
 
+    /**
+     * creates a groupe that channels will belong to
+     * 
+     * @param {String} name 
+     * @param {String} description 
+     *  
+     */
     addGroup(name, description) {
         validate.arguments([
             { name: 'name', value: name, type: 'string', notEmpty: true },
@@ -25,6 +32,14 @@ const logic = {
         })()
     },
 
+    /**
+     * Retrieve a group and all the channels that are referenced to this group
+     * 
+     * 
+     * @param {String} id 
+     * 
+     * @throws {Error} if the group has not been found
+     */
     retrieveGroupWithChannels(id) {
         validate.arguments([
             { name: 'id', value: id, type: 'string', notEmpty: true }
@@ -62,6 +77,17 @@ const logic = {
 
     /***********************************CHANNEL*********************************************/
 
+    /**
+     * Creates a channel that can belong to different groups
+     * 
+     * @param {Array} group_Ids 
+     * @param {String} title 
+     * @param {String} language 
+     * @param {String} picture 
+     * @param {Boolean} has_subchannels 
+     *      
+     * @throws {Error} if the group has not been found
+     */
     addChannel(group_Ids, title, language, picture, has_subchannels) {
         validate.arguments([
             { name: 'group_Ids', value: group_Ids, type: 'array', notEmpty: true },
@@ -95,6 +121,22 @@ const logic = {
 
     /***********************************CONTENT-CHANNELS*********************************************/
 
+    /**
+     * It adds a video content to the channels without subchannels
+     * 
+     * @param {String} channel_id 
+     * @param {String} type 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} movie_director 
+     * @param {String} genre 
+     * @param {String} description 
+     * @param {String} file_url 
+     * 
+     * @throws {Error} if the channel has not been found
+     * @throws {Error} if the 'has_subchannels' boolean is true
+     * @throws {Error} the variable 'type' should be 'video'
+     */
     addVideoContent(channel_id, type, title, author, movie_director, genre, description, file_url) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -131,6 +173,20 @@ const logic = {
         })()
     },
 
+    /**
+     * It adds a pdf content to the channels without subchannels
+     * 
+     * @param {String} channel_id 
+     * @param {String} type 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} description 
+     * @param {String} file_url 
+     * 
+     * @throws {Error} if the channel has not been found
+     * @throws {Error} if the 'has_subchannels' boolean is true
+     * @throws {Error} the variable 'type' should be 'pdf'
+     */
     addPdfContent(channel_id, type, title, author, description, file_url) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -164,6 +220,20 @@ const logic = {
         })()
 
     },
+
+    /**
+     * It adds a text content to the channels without subchannels
+     * 
+     * @param {String} channel_id 
+     * @param {String} type 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} text_body 
+     * 
+     * @throws {Error} if the channel has not been found
+     * @throws {Error} if the 'has_subchannels' boolean is true
+     * @throws {Error} the variable 'type' should be 'text'
+     */
     addTextContent(channel_id, type, title, author, text_body) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -199,7 +269,17 @@ const logic = {
     },
 
     /***********************************SUBCHANNELS*******************************************/
-
+    
+    /**
+     * it creates subchannels nested on channels
+     * 
+     * @param {String} channel_id 
+     * @param {String} title 
+     * @param {String} language 
+     * @param {String} picture 
+     * 
+     * @throws {Error} if the channel does not allow to add subchannels
+     */
     addSubchannels(channel_id, title, language, picture) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -222,7 +302,7 @@ const logic = {
 
                     return await channel.save();
                 }
-                if (!channel.has_subchannels) throw Error(`no permission to add subchannels to this channel`)
+                if (!channel.has_subchannels) throw Error(`this channel does not allow to add subchannels to this channel`)
 
             } catch (error) {
                 throw new Error(error.message);
@@ -232,6 +312,24 @@ const logic = {
 
     /***********************************CONTENT-SUBCHANNELS*********************************************/
 
+    /**
+     * it adds content video nested to the subchannel that belong to a channnel 
+     * 
+     * @param {String} channel_id 
+     * @param {String} subchannel_id 
+     * @param {String} type 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} movie_director 
+     * @param {String} genre 
+     * @param {String} description 
+     * @param {String} file_url
+     * 
+     * @throws {Error} if the channel has not been found
+     * @throws {Error} if the channel does not accept subchannels content
+     * @throws {Error} if the subchannel has not been found
+     * @throws {Error} the variable 'type' should be 'video' 
+     */
     addSubchannelVideoContent(channel_id, subchannel_id, type, title, author, movie_director, genre, description, file_url) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -268,13 +366,29 @@ const logic = {
 
                 if (type !== 'video') throw Error(`please indicate that type is video`)
 
-
             } catch (error) {
                 throw new Error(error.message);
             }
         })()
     },
 
+    /**
+     * it adds content pdf nested to the subchannel that belong to a channnel 
+     * 
+     *  
+     * @param {String} channel_id 
+     * @param {String} subchannel_id 
+     * @param {String} type 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} description 
+     * @param {String} file_url 
+     * 
+     * @throws {Error} if the channel has not been found
+     * @throws {Error} if the channel does not accept subchannels content
+     * @throws {Error} if the subchannel has not been found
+     * @throws {Error} the variable 'type' should be 'pdf' 
+     */
     addSubchannelPdfContent(channel_id, subchannel_id, type, title, author, description, file_url) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -317,6 +431,21 @@ const logic = {
 
     },
 
+    /**
+     * it adds content text nested to the subchannel that belong to a channnel 
+     * 
+     * @param {String} channel_id 
+     * @param {String} subchannel_id 
+     * @param {String} type 
+     * @param {String} title 
+     * @param {String} author 
+     * @param {String} text_body 
+     * 
+     * @throws {Error} if the channel has not been found
+     * @throws {Error} if the channel does not accept subchannels content
+     * @throws {Error} if the subchannel has not been found
+     * @throws {Error} the variable 'type' should be 'text' 
+     */
     addSubchannelTextContent(channel_id, subchannel_id, type, title, author, text_body) {
         validate.arguments([
             { name: 'channel_id', value: channel_id, type: 'string', notEmpty: true },
@@ -357,6 +486,18 @@ const logic = {
 
     /***********************************RATING***********************************************/
 
+    /**
+     * adding a rating value between 0-10 to the content that belong to channel without subchannels
+     * 
+     * @param {Number} rating_value 
+     * @param {String} channel_id 
+     * @param {String} content_id 
+     * 
+     * @throws {Error} the rating value must be between 0-10
+     * @throws {Error} the channel has not been found
+     * @throws {Error} if the channel has no subchannels
+     * @throws {Error} the content has not been found
+     */
     addRatingValueContentChannel(rating_value, channel_id, content_id) {
         validate.arguments([
             { name: 'rating_value', value: rating_value, type: 'number', notEmpty: true },
@@ -371,7 +512,7 @@ const logic = {
                 const channel = await Channel.findById(channel_id)
                 if (!channel) throw Error(`No_channel_found`)
 
-                if (channel.has_subchannels) throw Error(`This channel has no content`)
+                if (channel.has_subchannels) throw Error(`This channel has no subchannels`)
 
                 const index_content = channel.content.findIndex(element => element._id.toString() === content_id)
                 if (index_content === -1) throw Error(`No_content_found`)
@@ -383,6 +524,21 @@ const logic = {
             }
         })()
     },
+
+    /**
+     * adding a rating value between 0-10 to the content that belong to a subchannels
+     * 
+     * @param {String} rating_value 
+     * @param {String} channel_id 
+     * @param {String} subchannel_id 
+     * @param {String} content_id 
+     * 
+     * @throws {Error} the rating value must be between 0-10
+     * @throws {Error} the channel has not been found
+     * @throws {Error} the subchannel has not been found
+     * @throws {Error} if the channel has no subchannels
+     * @throws {Error} the content has not been found
+     */
     addRatingValueContentSubchannel(rating_value, channel_id, subchannel_id, content_id) {
         validate.arguments([
             { name: 'rating_value', value: rating_value, type: 'number', notEmpty: true },
@@ -419,7 +575,12 @@ const logic = {
 
     /***********************************AVERAGE***********************************************/
 
-
+    /**
+     * Calculates the average channels that contain just contents, without subchannels
+     * 
+     * @throws {Error} if there are no channels without subchannels available
+     * 
+     */
     averageChannelsWithContent() {
 
         return (async () => {
@@ -469,6 +630,13 @@ const logic = {
         })()
     },
 
+    /**
+     *     
+     * Calculates the  channels average that contain content just inside subchannels
+     * 
+     * @throws {Error} if there are no channels without subchannels available
+     * 
+     */
     averageChannelsWithSubchannels() {
 
         return (async () => {
@@ -478,7 +646,6 @@ const logic = {
                 let average_contents = []
                 let average_content_subchannel = []
                 let average_content_channel = []
-
 
                 const channels = await Channel.find({ has_subchannels: true })
                 if (!channels) throw Error(`No_channel_found`)
@@ -535,6 +702,10 @@ const logic = {
         })()
     },
 
+    /**
+     * Exports a csv file with the channels average ranking
+     * 
+     */
     listAverageAllChannels() {
 
         return (async () => {
@@ -564,19 +735,16 @@ const logic = {
                 console.log(csv)
 
                 fs.writeFile('raking_channels_rating.csv', csv, function(err) {
-                    if (err) console.log(err);
+                    if (err) throw (err);
                     console.log('file saved');
                 });
                 // -> Check 'customer.csv' file in root project folder             
-
             }
             catch (error) {
                 throw new Error(error.message);
             }
         })()
-
     }
-
 }
 
 module.exports = logic

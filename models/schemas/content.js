@@ -9,7 +9,8 @@ const text = require('./text')
 const content = new Schema({
     type:{
         type: String,
-        required: true
+        enum:['video','pdf','text'],
+        required: true,
     },
     /*
     item:{
