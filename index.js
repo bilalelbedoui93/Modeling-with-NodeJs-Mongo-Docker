@@ -17,7 +17,7 @@ const { env: { MONGO_URL, PORT } } = process;
 
 (async () => {
     try {
-        await mongoose.connect(MONGO_URL || "mongodb://localhost/immfly_project", {
+        await mongoose.connect(MONGO_URL || "mongodb://mongo:27017/immfly_project", {
             useUnifiedTopology: true,
             useNewUrlParser: true,
             useCreateIndex: true,
