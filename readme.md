@@ -87,6 +87,21 @@ npm run test:coverage
 |add a text to a subchannel |POST  |/api/subchannel/content-text  |channel_id, subchannel_id, type, title ...|message:'... to subchannel'    |
 |rating value subch. content|POST  |/api/subchannel/content/rating|rating_value, channel_id, subchannel_id...|message:'rating value added...'|
 
+## Docker
+
+```bash
+# Run in Docker
+docker-compose up
+# use -d flag to run in background
+
+# Tear down
+docker-compose down
+
+# To re-build
+docker-compose build
+```
+
+
 ## Testing & Coverage
 
 ![Testing](images/testing_1.png)
