@@ -6,7 +6,7 @@ router.post('/channel', async (req, res) => {
     try {
         const { body: { group_Ids, title, language, picture, has_subchannels} } = req
         await logic.addChannel(group_Ids, title, language, picture, has_subchannels)
-        res.json({ message: 'Channel added' })
+        res.status(201).json({ message: 'Channel added' })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -15,7 +15,7 @@ router.post('/channel', async (req, res) => {
 router.get('/channels/average', async (req, res) => {
     try {
         const response = await logic.listAverageAllChannels()
-        res.json({ response })
+        res.status(200).json({ response })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }

@@ -43,15 +43,12 @@ npm run start
 ```
 ### 4. To test the API
 
-// TO DO
-
 ```bash
 npm run test
 ```
 
 ### 5. Run coverage testing
 
-// TO DO
 ```bash
 npm run test:coverage
 ```
@@ -90,3 +87,7 @@ npm run test:coverage
 |add a text to a subchannel |POST  |/api/subchannel/content-text  |channel_id, subchannel_id, type, title ...|message:'... to subchannel'    |
 |rating value subch. content|POST  |/api/subchannel/content/rating|rating_value, channel_id, subchannel_id...|message:'rating value added...'|
 
+## Testing & Coverage
+
+![Testing](images/testing_1.png)
+![Coverage](images/coverage.png)

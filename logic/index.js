@@ -162,13 +162,15 @@ const logic = {
 
                     channel.content.push(content_post)
 
-                    return await channel.save()
+                    await channel.save()
+
+                    return content_post
                 }
 
                 if (type !== 'video') throw Error(`please indicate that type is video`)
 
             } catch (error) {
-                throw new Error(error.message);
+                throw new Error(error.message)
             }
         })()
     },
@@ -210,7 +212,9 @@ const logic = {
 
                     channel.content.push(content_post)
 
-                    return await channel.save()
+                    await channel.save()
+
+                    return content_post
                 }
 
                 if (type !== 'pdf') throw Error(`please indicate that type is pdf`)
@@ -257,12 +261,14 @@ const logic = {
 
                     channel.content.push(content_post)
 
-                    return await channel.save()
+                    await channel.save()
+
+                    return content_post
                 }
 
                 if (type !== 'text') throw Error(`please indicate that type is text`)
             } catch (error) {
-                throw new Error(error.message);
+                throw new Error(error.message)
             }
         })()
 
@@ -300,7 +306,9 @@ const logic = {
 
                     channel.subchannels.push(subchannel)
 
-                    return await channel.save();
+                    await channel.save()
+
+                    return subchannel
                 }
                 if (!channel.has_subchannels) throw Error(`this channel does not allow to add subchannels to this channel`)
 
@@ -359,7 +367,9 @@ const logic = {
 
                         channel.subchannels[index_subchannel].content.push(content_post)
 
-                        return await channel.save()
+                        await channel.save()
+
+                        return content_post
                     }
                     if (!channel.has_subchannels) throw Error(`channel does not accept subchannel content`)
                 }
@@ -402,7 +412,7 @@ const logic = {
         return (async () => {
             try {
                 if (type === 'pdf') {
-                    debugger
+                    
                     const channel = await Channel.findById(channel_id)
                     if (!channel) throw Error(`No_channel_found`)
 
@@ -417,7 +427,10 @@ const logic = {
 
                         channel.subchannels[index_subchannel].content.push(content_post)
 
-                        return await channel.save()
+                        await channel.save()
+
+                        return content_post
+
                     }
 
                     if (!channel.has_subchannels) throw Error(`channel does not accept subchannel content`)
@@ -472,7 +485,9 @@ const logic = {
 
                         channel.subchannels[index_subchannel].content.push(content_post)
 
-                        return await channel.save()
+                        await channel.save()
+
+                        return content_post
                     }
                     if (!channel.has_subchannels) throw Error(`channel does not accept subchannel content`)
                 }
@@ -512,7 +527,7 @@ const logic = {
                 const channel = await Channel.findById(channel_id)
                 if (!channel) throw Error(`No_channel_found`)
 
-                if (channel.has_subchannels) throw Error(`This channel has no subchannels`)
+                if (channel.has_subchannels) throw Error(`Channel has no content, this channel containt subchannels`)
 
                 const index_content = channel.content.findIndex(element => element._id.toString() === content_id)
                 if (index_content === -1) throw Error(`No_content_found`)
@@ -550,7 +565,7 @@ const logic = {
         return (async () => {
             try {
 
-                if (rating_value < 0 || rating_value > 10) throw Error(`rating value must be between 0-10`)
+                if (rating_value < 0 || rating_value > 10) throw Error('rating value must be between 0-10')
 
                 const channel = await Channel.findById(channel_id)
                 if (!channel) throw Error(`No_channel_found`)
@@ -558,15 +573,15 @@ const logic = {
                 if (channel.has_subchannels) {
 
                     const index_subchannel = channel.subchannels.findIndex(element => element._id.toString() === subchannel_id)
-                    if (index_subchannel === -1) throw Error(`No_subchannel_found`)
+                    if (index_subchannel === -1) throw Error('No_subchannel_found')
 
                     const index_content = channel.subchannels[index_subchannel].content.findIndex(element => element._id.toString() === content_id)
-                    if (index_content === -1) throw Error(`No_content_found`)
+                    if (index_content === -1) throw Error('No_content_found')
 
                     channel.subchannels[index_subchannel].content[index_content].rating.push(rating_value)
                     return await channel.save()
                 }
-                if (!channel.has_subchannels) throw Error(`channel does not accept subchannel rating`)
+                if (!channel.has_subchannels) throw Error('There are no subchannels to evaluate')
             } catch (error) {
                 throw new Error(error.message);
             }
